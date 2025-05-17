@@ -4,4 +4,6 @@
 # But not these files...
 !.zshrc
 !.sh/
+!.config/nvim
 !.gitignore
+!.gitmodules
