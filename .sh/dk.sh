@@ -10,11 +10,17 @@ dkrun() {
 	echo "FROM $imagename
 
 	RUN apt-get update \
-	    && apt-get install -y zsh git \
+	    && apt-get install -y zsh git tmux
 
-	COPY .oh-my-zsh /root/.oh-my-zsh
+	RUN git clone https://github.com/neovim/neovim.git && cd neovim \
+		  && git checkout release-0.11 && make CMAKE_BUILD_TYPE=RelWithDebInfo \ 
+		  && sudo make install && cd .. && rm -rf neovim
 
-	COPY .zshrc /root/
+	RUN wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
+		  && sh install.sh && rm install.sh
+
+	RUN git clone --recursive https://github.com/charlifu/config-home.git \
+		  && mv -f config-home/* /root/ && rm -rf config-home
 
 	RUN chsh -s \$(which zsh)
 
@@ -49,7 +55,11 @@ dk-vllm-dev() {
 	echo "FROM $base_image
 
 	RUN apt-get update \
-	    && apt-get install -y zsh git \
+	    && apt-get install -y zsh git tmux
+
+	RUN git clone https://github.com/neovim/neovim.git && cd neovim \
+		  && git checkout release-0.11 && make CMAKE_BUILD_TYPE=RelWithDebInfo \ 
+		  && sudo make install && cd .. && rm -rf neovim
 
 	COPY .oh-my-zsh /root/.oh-my-zsh
 
