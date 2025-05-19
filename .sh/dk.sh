@@ -20,7 +20,8 @@ dkrun() {
 		  && sh install.sh && rm install.sh
 
 	RUN git clone --recursive https://github.com/charlifu/config-home.git \
-		  && mv -f config-home/* /root/ && rm -rf config-home
+		  && mv config-home/.git /root/ && rm -rf config-home \
+		  && cd /root/ && git checkout . && git submodule update --recursive
 
 	RUN chsh -s \$(which zsh)
 
@@ -106,7 +107,7 @@ dk-triton-dev() {
 	RUN rm /usr/lib/python3.*/EXTERNALLY-MANAGED
 
 	RUN apt update \
-	    && apt install -y zsh git clang curl sudo vim less \
+	    && apt install -y zsh git tmux clang curl sudo vim less \
 		&& apt install -y software-properties-common python-is-python3 \
 
 	RUN python3 -m pip install packaging 'cmake<4' ninja setuptools pybind11 Cython
